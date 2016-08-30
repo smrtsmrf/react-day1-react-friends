@@ -15,45 +15,15 @@ class FriendsList extends React.Component {
 	}
 
 	render() {
-
+		
 		if (this.state.sortBy=='Name') {
 			var friendsList = friends.filter(friend => friend.name.toLowerCase().indexOf(this.state.searchText.toLowerCase()) !== -1 )
-			.sort((a,b) => a[this.state.orderBy] > b[this.state.orderBy] ? 1 : -1)
-			.map(friend => (
-		           <Friend
-			           currentLocation={friend.current_location || {}}
-			           friendCount={friend.friend_count}
-			           key={friend.$$hashKey}
-			           name={friend.name}
-			           pictureUrl={friend.pic_square}
-			           status={friend.status ? friend.status.message : ''}
-		        	/>
-		));
 		} else {
 			var friendsList = friends.filter(friend => friend.friend_count == this.state.searchText)
-			.sort((a,b) => a[this.state.orderBy] > b[this.state.orderBy] ? 1 : -1)
-			.map(friend => (
-		           <Friend
-			           currentLocation={friend.current_location || {}}
-			           friendCount={friend.friend_count}
-			           key={friend.$$hashKey}
-			           name={friend.name}
-			           pictureUrl={friend.pic_square}
-			           status={friend.status ? friend.status.message : ''}
-		        	/>
-		));
 		}
 
-		{/*
-		if (this.state.sortBy=='Name') {
-			var friendsList = friends.filter(friend => friend.name.toLowerCase().indexOf(this.state.searchText.toLowerCase()) !== -1 )
-		));
-		} else {
-			var friendsList = friends.filter(friend => friend.friend_count == this.state.searchText)
-		));
-		}
-
-		friendsList.sort((a,b) => a[this.state.orderBy] > b[this.state.orderBy] ? 1 : -1)
+		{/*.map returns a new array, so I had to do friendsList = */}
+		friendsList = friendsList.sort((a,b) => a[this.state.orderBy] > b[this.state.orderBy] ? 1 : -1)
 		.map(friend => (
 		           <Friend
 			           currentLocation={friend.current_location || {}}
@@ -64,11 +34,8 @@ class FriendsList extends React.Component {
 			           status={friend.status ? friend.status.message : ''}
 		        	/>
 		));
-		*/}
 
-		console.log(friendsList)
 		const displayFriends = this.state.order === 'asc' ? friendsList : friendsList.slice().reverse();
-		console.log(displayFriends)
 		return (
 		      <div>
 		        	<form className="form-inline searchForm" role="form">
