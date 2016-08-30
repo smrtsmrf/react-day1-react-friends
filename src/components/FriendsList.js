@@ -7,16 +7,53 @@ class FriendsList extends React.Component {
 		super(props);
 
 		this.state = {
-			searchNameText: '',
-			searchFriendsText: '',
+			searchText: '',
 			orderBy: 'name',
-			order: 'asc'
+			order: 'asc',
+			sortBy: 'Name'
 		}
 	}
 
 	render() {
-		const friendsList = friends.filter(friend => friend.name.toLowerCase().indexOf(this.state.searchNameText.toLowerCase()) !== -1 )
-		.sort((a,b) => a[this.state.orderBy] > b[this.state.orderBy])
+
+		if (this.state.sortBy=='Name') {
+			var friendsList = friends.filter(friend => friend.name.toLowerCase().indexOf(this.state.searchText.toLowerCase()) !== -1 )
+			.sort((a,b) => a[this.state.orderBy] > b[this.state.orderBy] ? 1 : -1)
+			.map(friend => (
+		           <Friend
+			           currentLocation={friend.current_location || {}}
+			           friendCount={friend.friend_count}
+			           key={friend.$$hashKey}
+			           name={friend.name}
+			           pictureUrl={friend.pic_square}
+			           status={friend.status ? friend.status.message : ''}
+		        	/>
+		));
+		} else {
+			var friendsList = friends.filter(friend => friend.friend_count == this.state.searchText)
+			.sort((a,b) => a[this.state.orderBy] > b[this.state.orderBy] ? 1 : -1)
+			.map(friend => (
+		           <Friend
+			           currentLocation={friend.current_location || {}}
+			           friendCount={friend.friend_count}
+			           key={friend.$$hashKey}
+			           name={friend.name}
+			           pictureUrl={friend.pic_square}
+			           status={friend.status ? friend.status.message : ''}
+		        	/>
+		));
+		}
+
+		{/*
+		if (this.state.sortBy=='Name') {
+			var friendsList = friends.filter(friend => friend.name.toLowerCase().indexOf(this.state.searchText.toLowerCase()) !== -1 )
+		));
+		} else {
+			var friendsList = friends.filter(friend => friend.friend_count == this.state.searchText)
+		));
+		}
+
+		friendsList.sort((a,b) => a[this.state.orderBy] > b[this.state.orderBy] ? 1 : -1)
 		.map(friend => (
 		           <Friend
 			           currentLocation={friend.current_location || {}}
@@ -27,15 +64,19 @@ class FriendsList extends React.Component {
 			           status={friend.status ? friend.status.message : ''}
 		        	/>
 		));
+		*/}
 
+		console.log(friendsList)
 		const displayFriends = this.state.order === 'asc' ? friendsList : friendsList.slice().reverse();
+		console.log(displayFriends)
 		return (
 		      <div>
 		        	<form className="form-inline searchForm" role="form">
 		        		<div className="form-group">
 			        		<select
 			        			className="input-medium"
-			        		
+			        			value={this.state.sortBy}
+			        			onChange={this.handleChange.bind(this, 'sortBy')}
 			        		>
 			        			<option>Name</option>
 			        			<option>#Friends</option>
@@ -45,15 +86,15 @@ class FriendsList extends React.Component {
 			        			className="form-control" 
 			        			placeholder="Search for Friends"
 			        			value={this.state.searhNameText}
-			        			onChange={this.handleChange.bind(this, 'searchNameText')}
+			        			onChange={this.handleChange.bind(this, 'searchText')}
 			        		/>
 			        		<select 
 			        			className="input-medium"
 			        			value={this.state.orderBy}
 			        			onChange={this.handleChange.bind(this, 'orderBy')}
 			        		>
-			        			<option>Name</option>
-			        			<option>#Friends</option>
+			        			<option value="name">Name</option>
+			        			<option value="friend_count">#Friends</option>
 			        		</select>
 
 			        		<select 
